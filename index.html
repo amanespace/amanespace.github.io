@@ -4,7 +4,25 @@
   <meta charset="UTF-8" />
   <title>College Home - Select Department & Semester</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.0/minty/bootstrap.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <style>
+    @media (max-width: 600px) {
+  .selector-container {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+  .form-select {
+    min-width: 100% !important;
+    max-width: 300px;
+  }
+  .btn-go {
+    width: 100% !important;
+    max-width: 300px;
+    margin-top: 15px;
+  }
+}
+
     body {
       background: #f9f9f9;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
