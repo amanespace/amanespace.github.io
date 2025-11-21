@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>College PDF Downloads</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.0/minty/bootstrap.min.css" />
+  <style>
+    body {
+      background: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #333;
+    }
+    .pdf-card {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgb(0 0 0 / 0.1);
+      margin-bottom: 24px;
+      padding: 20px;
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+      border: 2px solid #4682b4;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .pdf-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 20px rgb(0 0 0 / 0.15);
+      border-color: #d7263d;
+    }
+    .pdf-card h4 {
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: #2c3e50;
+      margin-bottom: 1rem;
+    }
+    .btn-main {
+      background: #4682b4;
+      color: #fff;
+      border-radius: 4px;
+      padding: 10px 15px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .btn-main:hover {
+      background: #d7263d;
+      color: #fff;
+    }
+    footer {
+      background: #2c3e50;
+      color: #ecf0f1;
+      text-align: center;
+      padding: 20px 0;
+      margin-top: auto;
+      font-size: 1rem;
+    }
+    footer a {
+      color: #ecf0f1;
+      margin: 0 12px;
+      text-decoration: none;
+    }
+    footer a:hover {
+      color: #ffd700;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-5">
+    <h1 class="text-center mb-4" style="color:#2c3e50;">College PDF Library</h1>
+    <div class="text-center mb-4">
+      <a href="pdfs/all-files.zip" class="btn btn-lg btn-main">Download All PDFs</a>
+    </div>
+    <div class="row">
+      <!-- Repeat this block for each PDF -->
+      <div class="col-md-3 col-sm-6">
+        <div class="pdf-card">
+          <h4>Semester 1 Notes</h4>
+          <a href="pdfs/sem1-notes.pdf" class="btn btn-main">Download</a>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="pdf-card">
+          <h4>Lab Manual</h4>
+          <a href="pdfs/lab-manual.pdf" class="btn btn-main">Download</a>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="pdf-card">
+          <h4>Semester 2 Notes</h4>
+          <a href="pdfs/sem2-notes.pdf" class="btn btn-main">Download</a>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="pdf-card">
+          <h4>Project Report</h4>
+          <a href="pdfs/project-report.pdf" class="btn btn-main">Download</a>
+        </div>
+      </div>
+      <!-- More boxes below -->
+      <div class="col-md-3 col-sm-6">
+        <div class="pdf-card">
+          <h4>Exam Papers</h4>
+          <a href="pdfs/exam-papers.pdf" class="btn btn-main">Download</a>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="pdf-card">
+          <h4>Course Syllabus</h4>
+          <a href="pdfs/course-syllabus.pdf" class="btn btn-main">Download</a>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="pdf-card">
+          <h4>Internship Guide</h4>
+          <a href="pdfs/internship-guide.pdf" class="btn btn-main">Download</a>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="pdf-card">
+          <h4>College Magazine</h4>
+          <a href="pdfs/college-magazine.pdf" class="btn btn-main">Download</a>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="pdf-card">
+          <h4>Workshops</h4>
+          <a href="pdfs/workshops.pdf" class="btn btn-main">Download</a>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="pdf-card">
+          <h4>Holiday List</h4>
+          <a href="pdfs/holiday-list.pdf" class="btn btn-main">Download</a>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="pdf-card">
+          <h4>Faculty Details</h4>
+          <a href="pdfs/faculty-details.pdf" class="btn btn-main">Download</a>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="pdf-card">
+          <h4>Library Rules</h4>
+          <a href="pdfs/library-rules.pdf" class="btn btn-main">Download</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Connect with me:</p>
+    <a href="https://instagram.com/aman.thakur.386" target="_blank" rel="noopener noreferrer">Instagram</a> | 
+    <a href="https://t.me/amanthakur386" target="_blank" rel="noopener noreferrer">Telegram</a> | 
+    <a href="https://wa.me/9155672386/?text=urlencodedtext">Whatsapp</a>
+    <p>&copy; 2025 College Name. All rights reserved.</p>
+  </footer>
+</body>
+</html>
