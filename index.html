@@ -1,150 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Site under maintenance. We'll be back shortly.">
-    <title>Under Maintenance</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Protected Maintenance Page">
+<title>Protected Page</title>
 
-        html, body {
-            width: 100%;
-            height: 100%;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #1a1a1a;
-        }
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-        .container {
-            text-align: center;
-            padding: 40px 20px;
-            max-width: 550px;
-            animation: fadeIn 0.8s ease-out;
-        }
+body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:#fff;
+    color:#1a1a1a;
+}
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
+/* Login Screen */
 
-        .icon {
-            font-size: 56px;
-            margin-bottom: 32px;
-            opacity: 0.8;
-        }
+#login{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
 
-        h1 {
-            font-size: 42px;
-            font-weight: 700;
-            color: #1a1a1a;
-            margin-bottom: 16px;
-            letter-spacing: -0.5px;
-        }
+.card{
+    width:100%;
+    max-width:360px;
+    background:#fff;
+    border:1px solid #eee;
+    border-radius:16px;
+    padding:30px 24px;
+    box-shadow:0 10px 30px rgba(0,0,0,.06);
+}
 
-        .subtitle {
-            font-size: 18px;
-            color: #666666;
-            margin-bottom: 24px;
-            line-height: 1.5;
-            font-weight: 400;
-        }
+.card h2{
+    text-align:center;
+    margin-bottom:8px;
+}
 
-        .description {
-            font-size: 15px;
-            color: #888888;
-            margin-bottom: 36px;
-            line-height: 1.7;
-        }
+.card p{
+    text-align:center;
+    color:#666;
+    margin-bottom:22px;
+}
 
-        .cta-button {
-            display: inline-block;
-            padding: 12px 28px;
-            background: #1a1a1a;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 500;
-            font-size: 14px;
-            margin-top: 12px;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-        }
+input{
+    width:100%;
+    padding:14px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-size:15px;
+    outline:none;
+    margin-bottom:16px;
+}
 
-        .cta-button:hover {
-            background: #333333;
-        }
+input:focus{
+    border-color:#2563eb;
+}
 
-        .cta-button:active {
-            transform: scale(0.98);
-        }
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    background:#2563eb;
+    color:#fff;
+    font-size:15px;
+    cursor:pointer;
+}
 
-        .divider {
-            margin: 48px 0;
-            height: 1px;
-            background: #f0f0f0;
-        }
+button:hover{
+    background:#1d4ed8;
+}
 
-        .footer {
-            padding-top: 20px;
-        }
+#msg{
+    margin-top:14px;
+    text-align:center;
+    font-size:14px;
+    color:#dc2626;
+}
 
-        .author-name {
-            font-weight: 600;
-            color: #1a1a1a;
-            font-size: 15px;
-        }
+/* Maintenance Page */
 
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 28px;
-            margin-top: 20px;
-        }
+#maintenance{
+    display:none;
+    width:100%;
+    min-height:100vh;
+    align-items:center;
+    justify-content:center;
+}
 
-        .social-link {
-            color: #888888;
-            text-decoration: none;
-            font-size: 13px;
-            transition: color 0.3s ease;
-        }
+.container{
+    text-align:center;
+    padding:40px 20px;
+    max-width:550px;
+    animation:fadeIn .8s ease-out;
+}
 
-        .social-link:hover {
-            color: #1a1a1a;
-        }
+@keyframes fadeIn{
+    from{opacity:0;}
+    to{opacity:1;}
+}
 
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 32px;
-            }
+.icon{
+    font-size:56px;
+    margin-bottom:32px;
+    opacity:.8;
+}
 
-            .subtitle {
-                font-size: 16px;
-            }
+h1{
+    font-size:42px;
+    font-weight:700;
+    margin-bottom:16px;
+    letter-spacing:-.5px;
+}
 
-            .icon {
-                font-size: 48px;
-            }
+.subtitle{
+    font-size:18px;
+    color:#666;
+    margin-bottom:24px;
+    line-height:1.5;
+}
 
-            .container {
-                padding: 30px 20px;
-            }
-        }
-    </style>
+.description{
+    font-size:15px;
+    color:#888;
+    line-height:1.7;
+}
+
+.divider{
+    margin:48px 0;
+    height:1px;
+    background:#f0f0f0;
+}
+
+.author-name{
+    font-weight:600;
+    font-size:15px;
+}
+
+@media(max-width:600px){
+    h1{font-size:32px;}
+    .subtitle{font-size:16px;}
+    .icon{font-size:48px;}
+}
+</style>
 </head>
 <body>
+
+<!-- LOGIN -->
+<div id="login">
+    <div class="card">
+        <h2>🔒 Protected Page</h2>
+        <p>Enter password to continue</p>
+
+        <input type="password" id="password" placeholder="Password" autofocus>
+
+        <button onclick="login()">Continue</button>
+
+        <div id="msg"></div>
+    </div>
+</div>
+
+<!-- MAINTENANCE PAGE -->
+<div id="maintenance">
     <div class="container">
         <div class="icon">⚙️</div>
 
@@ -161,5 +186,39 @@
             <p class="author-name">Aman K. Thakur</p>
         </div>
     </div>
+</div>
+
+<script>
+// SHA-256 hash of "amankumarthakurA9_"
+const PASSWORD_HASH = "e390ae4664fef48f0dae9bf3ebb2b921b1eb7d59e98b188d3557dc91bdb6bcb8";
+
+async function sha256(text){
+    const data = new TextEncoder().encode(text);
+    const hash = await crypto.subtle.digest("SHA-256", data);
+    return [...new Uint8Array(hash)]
+        .map(b=>b.toString(16).padStart(2,"0"))
+        .join("");
+}
+
+async function login(){
+    const password = document.getElementById("password").value;
+    const hash = await sha256(password);
+    const msg = document.getElementById("msg");
+
+    if(hash === PASSWORD_HASH){
+        document.getElementById("login").style.display = "none";
+        document.getElementById("maintenance").style.display = "flex";
+    }else{
+        msg.textContent = "Incorrect Password";
+    }
+}
+
+document.getElementById("password").addEventListener("keydown",function(e){
+    if(e.key==="Enter"){
+        login();
+    }
+});
+</script>
+
 </body>
 </html>
