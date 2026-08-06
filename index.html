@@ -1,869 +1,788 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Trading Journal - Track EUR/USD trades">
-<title>Trading Journal</title>
-
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-body{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-    background:#f8f9fb;
-    color:#1a1a1a;
-}
-
-/* ============ LOGIN SCREEN ============ */
-#login{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:20px;
-}
-
-.card{
-    width:100%;
-    max-width:360px;
-    background:#fff;
-    border:1px solid #eee;
-    border-radius:16px;
-    padding:30px 24px;
-    box-shadow:0 10px 30px rgba(0,0,0,.06);
-}
-
-.card h2{
-    text-align:center;
-    margin-bottom:8px;
-    font-size:22px;
-}
-
-.card p{
-    text-align:center;
-    color:#666;
-    margin-bottom:22px;
-    font-size:14px;
-}
-
-input{
-    width:100%;
-    padding:14px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    font-size:15px;
-    outline:none;
-    margin-bottom:16px;
-}
-
-input:focus{
-    border-color:#2563eb;
-    box-shadow:0 0 0 3px rgba(37,99,235,.1);
-}
-
-button{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:10px;
-    background:#2563eb;
-    color:#fff;
-    font-size:15px;
-    font-weight:500;
-    cursor:pointer;
-    transition:background .2s;
-}
-
-button:hover{
-    background:#1d4ed8;
-}
-
-button:active{
-    transform:scale(.98);
-}
-
-#msg{
-    margin-top:14px;
-    text-align:center;
-    font-size:14px;
-    color:#dc2626;
-    min-height:20px;
-}
-
-/* ============ DASHBOARD ============ */
-#dashboard{
-    display:none;
-    min-height:100vh;
-    background:linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    padding:40px 20px;
-}
-
-.dashboard-header{
-    max-width:1400px;
-    margin:0 auto 60px;
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-}
-
-.dashboard-header > div{
-    flex:1;
-}
-
-.dashboard-header h1{
-    font-size:48px;
-    font-weight:800;
-    letter-spacing:-1.5px;
-    color:#0f172a;
-    margin-bottom:16px;
-}
-
-.dashboard-header a{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    padding:10px 16px;
-    background:#fff;
-    border:1.5px solid #e2e8f0;
-    border-radius:10px;
-    font-size:13px;
-    font-weight:500;
-    color:#0f172a;
-    text-decoration:none;
-    transition:all .2s;
-}
-
-.dashboard-header a:hover{
-    border-color:#2563eb;
-    box-shadow:0 4px 12px rgba(37,99,235,.15);
-}
-
-.logout-btn{
-    padding:12px 24px;
-    background:#fff;
-    border:1.5px solid #e2e8f0;
-    border-radius:10px;
-    cursor:pointer;
-    font-size:13px;
-    font-weight:600;
-    color:#0f172a;
-    transition:all .2s;
-    align-self:flex-start;
-}
-
-.logout-btn:hover{
-    border-color:#dc2626;
-    color:#dc2626;
-    background:#fef2f2;
-}
-
-.blocks-container{
-    max-width:1400px;
-    margin:0 auto;
-    display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));
-    gap:28px;
-}
-
-.block{
-    background:#fff;
-    border:1.5px solid #e2e8f0;
-    border-radius:16px;
-    padding:32px;
-    cursor:pointer;
-    transition:all .3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow:0 1px 3px rgba(0,0,0,.08);
-    position:relative;
-    overflow:hidden;
-}
-
-.block::before{
-    content:'';
-    position:absolute;
-    top:0;
-    left:0;
-    right:0;
-    height:4px;
-    background:linear-gradient(90deg, #2563eb, #3b82f6);
-    transform:scaleX(0);
-    transition:transform .3s ease;
-    transform-origin:left;
-}
-
-.block:hover{
-    border-color:#2563eb;
-    box-shadow:0 12px 32px rgba(37,99,235,.12);
-    transform:translateY(-4px);
-}
-
-.block:hover::before{
-    transform:scaleX(1);
-}
-
-.block-icon{
-    font-size:44px;
-    margin-bottom:16px;
-    display:block;
-}
-
-.block-title{
-    font-size:20px;
-    font-weight:700;
-    color:#0f172a;
-    letter-spacing:-0.3px;
-}
-
-/* ============ TRADE JOURNAL MODAL ============ */
-.modal{
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,.45);
-    z-index:1000;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    backdrop-filter:blur(4px);
-}
-
-.modal.active{
-    display:flex;
-}
-
-.modal-content{
-    background:#fff;
-    border-radius:20px;
-    padding:48px;
-    max-width:680px;
-    width:100%;
-    max-height:90vh;
-    overflow-y:auto;
-    box-shadow:0 25px 50px rgba(0,0,0,.15);
-    animation:slideUp .3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes slideUp{
-    from{
-        opacity:0;
-        transform:translateY(24px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-
-.modal-header{
-    margin-bottom:40px;
-}
-
-.modal-header h2{
-    font-size:28px;
-    font-weight:800;
-    color:#0f172a;
-    margin-bottom:6px;
-    letter-spacing:-0.5px;
-}
-
-.modal-header p{
-    color:#64748b;
-    font-size:13px;
-    font-weight:500;
-}
-
-.close-btn{
-    position:absolute;
-    top:24px;
-    right:24px;
-    background:none;
-    border:none;
-    font-size:24px;
-    cursor:pointer;
-    color:#94a3b8;
-    width:36px;
-    height:36px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border-radius:8px;
-    transition:all .2s;
-}
-
-.close-btn:hover{
-    background:#f1f5f9;
-    color:#0f172a;
-}
-
-/* ============ FORM ============ */
-.form-group{
-    margin-bottom:24px;
-}
-
-.form-group label{
-    display:block;
-    margin-bottom:10px;
-    font-weight:600;
-    font-size:13px;
-    color:#0f172a;
-    text-transform:uppercase;
-    letter-spacing:0.5px;
-}
-
-.form-row{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea{
-    width:100%;
-    padding:14px 16px;
-    border:1.5px solid #e2e8f0;
-    border-radius:10px;
-    font-size:14px;
-    font-family:inherit;
-    outline:none;
-    transition:all .2s;
-    background:#f8fafc;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus{
-    background:#fff;
-    border-color:#2563eb;
-    box-shadow:0 0 0 3px rgba(37,99,235,.1);
-}
-
-.form-group textarea{
-    resize:vertical;
-    min-height:80px;
-    font-family:inherit;
-}
-
-.form-divider{
-    margin:32px 0;
-    height:1px;
-    background:#e2e8f0;
-}
-
-.auto-calc{
-    background:#f0f9ff;
-    padding:10px 12px;
-    border-left:3px solid #0ea5e9;
-    border-radius:6px;
-    font-size:12px;
-    color:#0369a1;
-    margin-top:6px;
-    font-weight:500;
-}
-
-.form-actions{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:14px;
-    margin-top:40px;
-}
-
-.btn{
-    padding:14px 20px;
-    border:none;
-    border-radius:10px;
-    font-size:14px;
-    font-weight:700;
-    cursor:pointer;
-    transition:all .2s;
-    text-transform:uppercase;
-    letter-spacing:0.5px;
-}
-
-.btn-primary{
-    background:linear-gradient(135deg, #2563eb, #1d4ed8);
-    color:#fff;
-    box-shadow:0 4px 15px rgba(37,99,235,.25);
-}
-
-.btn-primary:hover{
-    box-shadow:0 6px 20px rgba(37,99,235,.35);
-    transform:translateY(-2px);
-}
-
-.btn-primary:active{
-    transform:translateY(0);
-}
-
-.btn-secondary{
-    background:#f1f5f9;
-    color:#475569;
-    border:1.5px solid #e2e8f0;
-}
-
-.btn-secondary:hover{
-    background:#e2e8f0;
-    border-color:#cbd5e1;
-}
-
-.status-msg{
-    margin-top:20px;
-    padding:14px 16px;
-    border-radius:10px;
-    text-align:center;
-    font-size:13px;
-    display:none;
-    font-weight:600;
-}
-
-.status-msg.success{
-    background:#d1fae5;
-    color:#065f46;
-    border:1.5px solid #6ee7b7;
-}
-
-.status-msg.error{
-    background:#fee2e2;
-    color:#991b1b;
-    border:1.5px solid #fca5a5;
-}
-
-/* ============ RESPONSIVE ============ */
-@media(max-width:768px){
-    .dashboard-header{
-        flex-direction:column;
-        gap:20px;
-        margin-bottom:40px;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventory & Checkout System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    .dashboard-header h1{
-        font-size:36px;
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 16px;
+      color: #1a1a1a;
+      background: #f5f5f5;
     }
 
-    .blocks-container{
-        grid-template-columns:1fr;
+    .container {
+      display: flex;
+      gap: 1px;
+      min-height: 100vh;
+      background: #e0e0e0;
     }
 
-    .modal-content{
-        padding:32px;
+    .sidebar {
+      width: 240px;
+      background: #f9f9f9;
+      padding: 0;
+      border-right: 1px solid #e0e0e0;
     }
 
-    .form-row{
-        grid-template-columns:1fr;
-        gap:16px;
+    .main {
+      flex: 1;
+      display: flex;
+      gap: 1px;
+      background: #e0e0e0;
     }
 
-    .form-actions{
-        grid-template-columns:1fr;
+    .panel {
+      background: #ffffff;
+      overflow-y: auto;
+      min-height: 100vh;
+      flex: 1;
     }
-}
 
-/* ============ SCROLLBAR ============ */
-.modal-content::-webkit-scrollbar{
-    width:8px;
-}
+    .panel-header {
+      font-weight: 500;
+      font-size: 14px;
+      padding: 1rem 1.25rem;
+      border-bottom: 0.5px solid #e0e0e0;
+      color: #666;
+      background: #fafafa;
+    }
 
-.modal-content::-webkit-scrollbar-track{
-    background:#f0f0f0;
-}
+    .panel-content {
+      padding: 1.25rem;
+    }
 
-.modal-content::-webkit-scrollbar-thumb{
-    background:#ccc;
-    border-radius:4px;
-}
+    .section {
+      padding: 1rem 1.25rem;
+      border-bottom: 0.5px solid #e0e0e0;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
 
-.modal-content::-webkit-scrollbar-thumb:hover{
-    background:#999;
-}
-</style>
+    .section:hover {
+      background: #f5f5f5;
+    }
+
+    .section.active {
+      background: #f0f0f0;
+      border-left: 3px solid #2563eb;
+      padding-left: calc(1.25rem - 3px);
+    }
+
+    .section-title {
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 0.4rem;
+      font-weight: 500;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: 0.5px solid #d0d0d0;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #2563eb;
+      background: #f8f8f8;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .btn {
+      padding: 0.6rem 1rem;
+      border: 0.5px solid #d0d0d0;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: #f5f5f5;
+      border-color: #999;
+    }
+
+    .btn.primary {
+      background: #2563eb;
+      color: white;
+      border: none;
+    }
+
+    .btn.primary:hover {
+      background: #1d4ed8;
+    }
+
+    .item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      background: #f9f9f9;
+      border-radius: 6px;
+      font-size: 13px;
+      border: 0.5px solid #efefef;
+    }
+
+    .item-info {
+      flex: 1;
+    }
+
+    .item-row .name {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    .item-row .prices {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .item-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-left: 0.75rem;
+    }
+
+    .item-row .edit-btn, .item-row .delete-btn {
+      padding: 0.4rem 0.6rem;
+      font-size: 12px;
+    }
+
+    .item-row .delete-btn {
+      background: #fee2e2;
+      color: #dc2626;
+      border: 0.5px solid #fecaca;
+    }
+
+    .item-row .delete-btn:hover {
+      background: #fecaca;
+    }
+
+    .item-row .edit-btn {
+      background: #e0e7ff;
+      color: #2563eb;
+      border: 0.5px solid #c7d2fe;
+    }
+
+    .item-row .edit-btn:hover {
+      background: #c7d2fe;
+    }
+
+    /* Gallery Layout */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .gallery-item {
+      background: #f9f9f9;
+      border: 0.5px solid #efefef;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .gallery-item .name {
+      font-weight: 600;
+      font-size: 14px;
+      color: #1a1a1a;
+    }
+
+    .gallery-item .price-tag {
+      display: flex;
+      justify-content: space-around;
+      gap: 0.5rem;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .gallery-item .price-tag div {
+      flex: 1;
+      padding: 0.4rem;
+      background: white;
+      border-radius: 4px;
+      border: 0.5px solid #e0e0e0;
+    }
+
+    .gallery-item .qty-control {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: white;
+      border: 0.5px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 0.4rem;
+    }
+
+    .qty-control button {
+      width: 24px;
+      height: 24px;
+      border: none;
+      background: #f0f0f0;
+      border-radius: 3px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 12px;
+      transition: background 0.2s;
+    }
+
+    .qty-control button:hover {
+      background: #e0e0e0;
+    }
+
+    .qty-control input {
+      width: 40px;
+      text-align: center;
+      border: none;
+      background: transparent;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .gallery-item .add-to-cart-btn {
+      background: #16a34a;
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 13px;
+      transition: background 0.2s;
+    }
+
+    .gallery-item .add-to-cart-btn:hover {
+      background: #15803d;
+    }
+
+    /* Modal for edit */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal-header {
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 1rem;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .modal-actions button {
+      flex: 1;
+      padding: 0.6rem 1rem;
+      border-radius: 4px;
+      border: 0.5px solid #d0d0d0;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .modal-actions .btn-save {
+      background: #2563eb;
+      color: white;
+      border: none;
+    }
+
+    .modal-actions .btn-cancel {
+      background: white;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      background: #f9f9f9;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      font-size: 13px;
+      border: 0.5px solid #efefef;
+    }
+
+    .cart-item .name {
+      font-weight: 500;
+    }
+
+    .cart-item .qty {
+      color: #666;
+      margin: 0 0.5rem;
+      font-size: 12px;
+    }
+
+    .cart-item .remove-btn {
+      background: transparent;
+      border: none;
+      color: #999;
+      cursor: pointer;
+      font-size: 12px;
+      padding: 0.2rem 0.4rem;
+      transition: color 0.2s;
+    }
+
+    .cart-item .remove-btn:hover {
+      color: #e74c3c;
+    }
+
+    .stat-box {
+      background: #f9f9f9;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 0.75rem;
+      border: 0.5px solid #efefef;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+
+    .breakdown {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem;
+      font-size: 13px;
+      border-bottom: 0.5px solid #e0e0e0;
+    }
+
+    .breakdown .label {
+      color: #666;
+    }
+
+    .breakdown .value {
+      font-weight: 500;
+    }
+
+    .final-total {
+      padding: 1rem;
+      background: #dbeafe;
+      border-radius: 6px;
+      margin-top: 1rem;
+      border: 0.5px solid #93c5fd;
+    }
+
+    .final-total .label {
+      color: #1e40af;
+      font-size: 13px;
+      margin-bottom: 0.4rem;
+    }
+
+    .final-total .value {
+      color: #1e40af;
+      font-size: 24px;
+      font-weight: 500;
+    }
+
+    .empty-state {
+      color: #999;
+      font-size: 13px;
+      text-align: center;
+      padding: 2rem 0;
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        display: flex;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .section {
+        flex: 1;
+        border-bottom: none;
+        border-right: 0.5px solid #e0e0e0;
+        padding: 0.75rem;
+      }
+
+      .section-title {
+        font-size: 13px;
+      }
+
+      .section.active {
+        border-left: none;
+        border-bottom: 3px solid #2563eb;
+        padding-bottom: calc(0.75rem - 3px);
+      }
+
+      .main {
+        flex-direction: column;
+      }
+
+      .panel {
+        min-height: auto;
+      }
+
+      .panel-content {
+        padding: 1rem;
+      }
+
+      .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 0.75rem;
+      }
+
+      .gallery-item {
+        padding: 0.75rem;
+      }
+
+      .gallery-item .name {
+        font-size: 13px;
+      }
+
+      .gallery-item .price-tag {
+        font-size: 11px;
+      }
+
+      .item-row {
+        flex-wrap: wrap;
+      }
+
+      .item-actions {
+        width: 100%;
+        gap: 0.5rem;
+        margin-left: 0;
+        margin-top: 0.5rem;
+      }
+
+      .item-actions button {
+        flex: 1;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .sidebar {
+        flex-wrap: wrap;
+      }
+
+      .section {
+        flex: 1;
+        min-width: 80px;
+        padding: 0.5rem;
+        text-align: center;
+      }
+
+      .section-title {
+        font-size: 12px;
+      }
+
+      .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      }
+
+      .form-group input {
+        font-size: 16px;
+      }
+
+      .modal-content {
+        width: 95%;
+        padding: 1rem;
+      }
+
+      .stat-box {
+        padding: 0.75rem;
+      }
+
+      .stat-value {
+        font-size: 16px;
+      }
+
+      .final-total .value {
+        font-size: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
-
-<!-- ============ LOGIN SCREEN ============ -->
-<div id="login">
-    <div class="card">
-        <h2>🔐 Trading Journal</h2>
-        <p>Enter password to continue</p>
-
-        <input type="password" id="password" placeholder="Password" autofocus>
-
-        <button onclick="login()">Continue</button>
-
-        <div id="msg"></div>
+  <div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="section active" onclick="showPanel('items')" data-panel="items">
+        <div class="section-title">📦 Items</div>
+      </div>
+      <div class="section" onclick="showPanel('cart')" data-panel="cart">
+        <div class="section-title">🛒 Cart</div>
+      </div>
+      <div class="section" onclick="showPanel('checkout')" data-panel="checkout">
+        <div class="section-title">💳 Checkout</div>
+      </div>
     </div>
-</div>
 
-<!-- ============ DASHBOARD ============ -->
-<div id="dashboard">
-    <div class="dashboard-header">
-        <div>
-            <h1>Aman's Dashboard</h1>
-            <a href="#" id="sheetLink" target="_blank" style="font-size:13px; color:#666; margin-top:8px; display:inline-block; text-decoration:none;">📊 Open Google Sheet</a>
+    <!-- Main Content -->
+    <div class="main">
+      <!-- Items Panel -->
+      <div class="panel" id="panel-items">
+        <div class="panel-header">Items Directory</div>
+        <div class="panel-content">
+          <div class="form-group">
+            <label>Item name</label>
+            <input type="text" id="itemName" placeholder="Enter item name">
+          </div>
+          <div class="form-group">
+            <label>Cost price (CP)</label>
+            <input type="number" id="itemCP" placeholder="0.00" step="0.01">
+          </div>
+          <div class="form-group">
+            <label>Selling price (SP)</label>
+            <input type="number" id="itemSP" placeholder="0.00" step="0.01">
+          </div>
+          <button class="btn primary" onclick="addItem()">Add item</button>
+
+          <div style="margin-top: 2rem;">
+            <div class="panel-header" style="margin: 0 -1.25rem 1rem -1.25rem; padding-left: 1.25rem; background: white; border-bottom: 0.5px solid #e0e0e0;">Added items</div>
+            <div id="itemsList"></div>
+          </div>
         </div>
-        <button class="logout-btn" onclick="logout()">Logout</button>
-    </div>
+      </div>
 
-    <div class="blocks-container">
-        <!-- Trade Data Block -->
-        <div class="block" onclick="openTradeModal()">
-            <div class="block-icon">📝</div>
-            <div class="block-title">Trade Data</div>
+      <!-- Edit Modal -->
+      <div class="modal" id="editModal">
+        <div class="modal-content">
+          <div class="modal-header">Edit item</div>
+          <div class="form-group">
+            <label>Item name</label>
+            <input type="text" id="editName" placeholder="Enter item name">
+          </div>
+          <div class="form-group">
+            <label>Cost price (CP)</label>
+            <input type="number" id="editCP" placeholder="0.00" step="0.01">
+          </div>
+          <div class="form-group">
+            <label>Selling price (SP)</label>
+            <input type="number" id="editSP" placeholder="0.00" step="0.01">
+          </div>
+          <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+            <button class="btn-save" onclick="saveEditItem()">Save</button>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
 
-<!-- ============ TRADE JOURNAL MODAL ============ -->
-<div class="modal" id="tradeModal">
-    <div class="modal-content">
-        <button class="close-btn" onclick="closeTradeModal()">✕</button>
-        
-        <div class="modal-header">
-            <h2>Log Trade</h2>
-            <p>Record your EUR/USD trade details</p>
+      <!-- Cart Panel -->
+      <div class="panel" id="panel-cart" style="display: none;">
+        <div class="panel-header">Shopping Cart</div>
+        <div class="panel-content">
+          <div id="cartList" style="margin-bottom: 1.5rem;"></div>
+          <div class="stat-box">
+            <div class="stat-label">Items in cart</div>
+            <div class="stat-value" id="cartCount">0</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Subtotal</div>
+            <div class="stat-value" id="cartSubtotal">₹0.00</div>
+          </div>
         </div>
+      </div>
 
-        <form id="tradeForm">
-            <!-- Basic Info -->
-            <div class="form-group">
-                <label>Currency Pair</label>
-                <input type="text" id="pair" value="EUR/USD" readonly>
+      <!-- Checkout Panel -->
+      <div class="panel" id="panel-checkout" style="display: none;">
+        <div class="panel-header">Checkout & Breakdown</div>
+        <div class="panel-content">
+          <div class="form-group">
+            <label>Pincode 1</label>
+            <input type="text" id="pincode1" placeholder="Enter pincode">
+          </div>
+          <div class="form-group">
+            <label>Pincode 2</label>
+            <input type="text" id="pincode2" placeholder="Enter pincode">
+          </div>
+          <div class="form-group">
+            <label>Shipping price</label>
+            <input type="number" id="shippingPrice" placeholder="0.00" step="0.01">
+          </div>
+
+          <div style="margin-top: 2rem;">
+            <div class="breakdown">
+              <span class="label">Subtotal</span>
+              <span class="value" id="breakdownSubtotal">₹0.00</span>
             </div>
-
-            <div class="form-group">
-                <label>Trade Date</label>
-                <input type="date" id="tradeDate" required>
+            <div class="breakdown">
+              <span class="label">Tax (18%)</span>
+              <span class="value" id="breakdownTax">₹0.00</span>
             </div>
-
-            <!-- Entry & Exit -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Entry Time</label>
-                    <input type="time" id="entryTime" required>
-                </div>
-                <div class="form-group">
-                    <label>Exit Time</label>
-                    <input type="time" id="exitTime" required>
-                </div>
+            <div class="breakdown">
+              <span class="label">Shipping</span>
+              <span class="value" id="breakdownShipping">₹0.00</span>
             </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Entry Price</label>
-                    <input type="text" id="entryPrice" placeholder="1.0950 or -">
-                </div>
-                <div class="form-group">
-                    <label>Exit Price</label>
-                    <input type="text" id="exitPrice" placeholder="1.0960 or -">
-                </div>
+            <div class="final-total">
+              <div class="label">Customer pays</div>
+              <div class="value" id="finalTotal">₹0.00</div>
             </div>
-
-            <!-- SL & TP -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Stop Loss</label>
-                    <input type="text" id="stopLoss" placeholder="1.0940 or -">
-                </div>
-                <div class="form-group">
-                    <label>Take Profit</label>
-                    <input type="text" id="takeProfit" placeholder="1.0970 or -">
-                </div>
-            </div>
-
-            <!-- Direction & Lot Size -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Direction</label>
-                    <select id="direction" required>
-                        <option value="">-- Select --</option>
-                        <option value="Long">Long</option>
-                        <option value="Short">Short</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Lot Size</label>
-                    <input type="number" id="lotSize" step="0.01" placeholder="0.01" required>
-                </div>
-            </div>
-
-            <div class="form-divider"></div>
-
-            <!-- Auto-Calculated Fields -->
-            <div class="form-group">
-                <label>Pips</label>
-                <input type="number" id="pips" step="0.1" readonly>
-                <div class="auto-calc">Calculated from Entry and Exit prices</div>
-            </div>
-
-            <div class="form-group">
-                <label>P&L</label>
-                <input type="number" id="pnl" step="0.01" placeholder="Enter P&L">
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Win/Loss</label>
-                    <input type="text" id="winLoss" placeholder="Enter Win/Loss">
-                </div>
-                <div class="form-group">
-                    <label>Trade Duration</label>
-                    <input type="text" id="duration" readonly>
-                </div>
-            </div>
-
-            <!-- Notes -->
-            <div class="form-group">
-                <label>Notes (optional)</label>
-                <textarea id="notes" placeholder="Add any trade notes..."></textarea>
-            </div>
-
-            <!-- Status Message -->
-            <div class="status-msg" id="statusMsg"></div>
-
-            <!-- Actions -->
-            <div class="form-actions">
-                <button type="button" class="btn btn-secondary" onclick="closeTradeModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="submitTrade()">Save to Sheets</button>
-            </div>
-        </form>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 
-<script>
-// ============ AUTHENTICATION ============
-const PASSWORD_HASH = "e390ae4664fef48f0dae9bf3ebb2b921b1eb7d59e98b188d3557dc91bdb6bcb8";
+  <script>
+    let items = [];
+    let cart = [];
 
-async function sha256(text){
-    const data = new TextEncoder().encode(text);
-    const hash = await crypto.subtle.digest("SHA-256", data);
-    return [...new Uint8Array(hash)]
-        .map(b=>b.toString(16).padStart(2,"0"))
-        .join("");
-}
+    function showPanel(panelName) {
+      document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
 
-async function login(){
-    const password = document.getElementById("password").value;
-    const hash = await sha256(password);
-    const msg = document.getElementById("msg");
+      document.getElementById(`panel-${panelName}`).style.display = 'block';
+      document.querySelector(`[data-panel="${panelName}"]`).classList.add('active');
 
-    if(hash === PASSWORD_HASH){
-        document.getElementById("login").style.display = "none";
-        document.getElementById("dashboard").style.display = "block";
-        setTodayDate();
-    }else{
-        msg.textContent = "Incorrect Password";
+      if (panelName === 'checkout') updateCheckout();
     }
-}
 
-function logout(){
-    document.getElementById("password").value = "";
-    document.getElementById("login").style.display = "flex";
-    document.getElementById("dashboard").style.display = "none";
-    closeTradeModal();
-}
+    function addItem() {
+      const name = document.getElementById('itemName').value.trim();
+      const cp = parseFloat(document.getElementById('itemCP').value);
+      const sp = parseFloat(document.getElementById('itemSP').value);
 
-document.getElementById("password").addEventListener("keydown",function(e){
-    if(e.key==="Enter"){
-        login();
-    }
-});
-
-// ============ MODAL MANAGEMENT ============
-function openTradeModal(){
-    document.getElementById("tradeModal").classList.add("active");
-}
-
-function closeTradeModal(){
-    document.getElementById("tradeModal").classList.remove("active");
-    resetForm();
-}
-
-document.getElementById("tradeModal").addEventListener("click", function(e){
-    if(e.target === this){
-        closeTradeModal();
-    }
-});
-
-function resetForm(){
-    document.getElementById("tradeForm").reset();
-    document.getElementById("statusMsg").innerHTML = "";
-    document.getElementById("statusMsg").className = "status-msg";
-    setTodayDate();
-}
-
-function setTodayDate(){
-    const today = new Date().toISOString().split("T")[0];
-    document.getElementById("tradeDate").value = today;
-}
-
-// ============ AUTO-CALCULATIONS ============
-function calculatePips(){
-    const entryVal = document.getElementById("entryPrice").value.trim();
-    const exitVal = document.getElementById("exitPrice").value.trim();
-    
-    if(entryVal === "-" || exitVal === "-" || !entryVal || !exitVal){
-        document.getElementById("pips").value = "";
+      if (!name || isNaN(cp) || isNaN(sp)) {
+        alert('Please fill all fields correctly');
         return;
+      }
+
+      items.push({ id: Date.now(), name, cp, sp });
+      document.getElementById('itemName').value = '';
+      document.getElementById('itemCP').value = '';
+      document.getElementById('itemSP').value = '';
+
+      renderItems();
     }
-    
-    const entry = parseFloat(entryVal);
-    const exit = parseFloat(exitVal);
-    
-    if(isNaN(entry) || isNaN(exit)) return;
-    
-    const pips = ((exit - entry) * 10000).toFixed(1);
-    document.getElementById("pips").value = pips;
-}
 
-function calculatePnL(){
-    // P&L calculation removed - user will add manually
-}
-
-function calculateDuration(){
-    const entryTime = document.getElementById("entryTime").value;
-    const exitTime = document.getElementById("exitTime").value;
-    
-    if(!entryTime || !exitTime) return;
-    
-    const [entryHour, entryMin] = entryTime.split(":").map(Number);
-    const [exitHour, exitMin] = exitTime.split(":").map(Number);
-    
-    let entryMinutes = entryHour * 60 + entryMin;
-    let exitMinutes = exitHour * 60 + exitMin;
-    
-    if(exitMinutes < entryMinutes){
-        exitMinutes += 24 * 60;
+    function renderItems() {
+      const html = items.map(item => `
+        <div class="item-row">
+          <div class="name">${item.name}</div>
+          <div class="price">CP: ₹${item.cp.toFixed(2)}</div>
+          <div class="price">SP: ₹${item.sp.toFixed(2)}</div>
+          <button class="btn add-btn" onclick="addToCart(${item.id})">Add</button>
+        </div>
+      `).join('');
+      document.getElementById('itemsList').innerHTML = html || '<div class="empty-state">No items added yet</div>';
     }
-    
-    const diff = exitMinutes - entryMinutes;
-    const hours = Math.floor(diff / 60);
-    const mins = diff % 60;
-    
-    let durationText = "";
-    if(hours > 0) durationText += hours + "h ";
-    durationText += mins + "m";
-    
-    document.getElementById("duration").value = durationText;
-}
 
-// Event listeners for auto-calculation
-document.getElementById("entryPrice").addEventListener("input", () => {
-    calculatePips();
-});
+    function addToCart(itemId) {
+      const item = items.find(i => i.id === itemId);
+      const existing = cart.find(c => c.id === itemId);
 
-document.getElementById("exitPrice").addEventListener("input", () => {
-    calculatePips();
-});
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ ...item, qty: 1 });
+      }
 
-document.getElementById("entryTime").addEventListener("change", calculateDuration);
-document.getElementById("exitTime").addEventListener("change", calculateDuration);
+      renderCart();
+    }
 
-// ============ GOOGLE APPS SCRIPT INTEGRATION ============
-// Replace with your Google Apps Script Web App URL
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxrsV7jU1tXhXUvWBJr8oBC67gD9QNTitYy-NkpuqqmrhnF2ZoNbqMCHbAFpSij-HcQaA/exec"; // Replace YOUR_SCRIPT_ID
+    function removeFromCart(itemId) {
+      cart = cart.filter(c => c.id !== itemId);
+      renderCart();
+    }
 
-function getIndianTime(){
-    const now = new Date();
-    const istFormatter = new Intl.DateTimeFormat('en-IN', { 
-        timeZone: 'Asia/Kolkata',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
+    function renderCart() {
+      const html = cart.map(item => `
+        <div class="cart-item">
+          <div style="flex: 1;">
+            <div class="name">${item.name}</div>
+            <div style="font-size: 12px; color: #666;">₹${item.sp.toFixed(2)} each</div>
+          </div>
+          <div class="qty">×${item.qty}</div>
+          <div style="text-align: right; margin-right: 0.5rem; font-weight: 500;">₹${(item.sp * item.qty).toFixed(2)}</div>
+          <button class="remove-btn" onclick="removeFromCart(${item.id})">✕</button>
+        </div>
+      `).join('');
+
+      document.getElementById('cartList').innerHTML = html || '<div class="empty-state">Cart is empty</div>';
+
+      const count = cart.reduce((sum, item) => sum + item.qty, 0);
+      const subtotal = cart.reduce((sum, item) => sum + (item.sp * item.qty), 0);
+
+      document.getElementById('cartCount').textContent = count;
+      document.getElementById('cartSubtotal').textContent = `₹${subtotal.toFixed(2)}`;
+    }
+
+    function updateCheckout() {
+      const subtotal = cart.reduce((sum, item) => sum + (item.sp * item.qty), 0);
+      const tax = subtotal * 0.18;
+      const shipping = parseFloat(document.getElementById('shippingPrice').value) || 0;
+      const total = subtotal + tax + shipping;
+
+      document.getElementById('breakdownSubtotal').textContent = `₹${subtotal.toFixed(2)}`;
+      document.getElementById('breakdownTax').textContent = `₹${Math.round(tax * 100) / 100}`;
+      document.getElementById('breakdownShipping').textContent = `₹${shipping.toFixed(2)}`;
+      document.getElementById('finalTotal').textContent = `₹${Math.round(total * 100) / 100}`;
+    }
+
+    // Update checkout when shipping price changes
+    document.addEventListener('change', function(e) {
+      if (e.target.id === 'shippingPrice') updateCheckout();
     });
-    return istFormatter.format(now);
-}
 
-async function submitTrade(){
-    const entryPriceVal = document.getElementById("entryPrice").value.trim();
-    const exitPriceVal = document.getElementById("exitPrice").value.trim();
-    const stopLossVal = document.getElementById("stopLoss").value.trim();
-    const takeProfitVal = document.getElementById("takeProfit").value.trim();
-    
-    const data = {
-        pair: document.getElementById("pair").value,
-        tradeDate: document.getElementById("tradeDate").value,
-        entryTime: document.getElementById("entryTime").value,
-        exitTime: document.getElementById("exitTime").value,
-        entryPrice: entryPriceVal === "-" ? "-" : entryPriceVal,
-        exitPrice: exitPriceVal === "-" ? "-" : exitPriceVal,
-        stopLoss: stopLossVal === "-" ? "-" : stopLossVal,
-        takeProfit: takeProfitVal === "-" ? "-" : takeProfitVal,
-        direction: document.getElementById("direction").value,
-        lotSize: document.getElementById("lotSize").value,
-        pips: document.getElementById("pips").value || "-",
-        pnl: document.getElementById("pnl").value || "-",
-        winLoss: document.getElementById("winLoss").value || "-",
-        duration: document.getElementById("duration").value,
-        notes: document.getElementById("notes").value,
-        timestamp: getIndianTime()
-    };
-
-    const statusMsg = document.getElementById("statusMsg");
-
-    // Validate required fields
-    if(!data.tradeDate || !data.entryTime || !data.exitTime || !data.direction || !data.lotSize){
-        statusMsg.textContent = "⚠️ Please fill Trade Date, Times, Direction, and Lot Size";
-        statusMsg.className = "status-msg error";
-        return;
-    }
-
-    try {
-        statusMsg.textContent = "⏳ Saving to Google Sheets...";
-        statusMsg.className = "status-msg";
-        
-        const response = await fetch(APPS_SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify(data)
-        });
-
-        const result = await response.json();
-
-        if(result.status === "success"){
-            statusMsg.textContent = "✓ Trade saved to Google Sheets!";
-            statusMsg.className = "status-msg success";
-            
-            setTimeout(() => {
-                resetForm();
-                closeTradeModal();
-            }, 1500);
-        } else {
-            throw new Error(result.message || "Failed to save");
-        }
-
-    } catch(error) {
-        console.error("Error saving trade:", error);
-        statusMsg.textContent = "✗ Error: " + error.message;
-        statusMsg.className = "status-msg error";
-    }
-}
-
-// ============ INITIALIZE ============
-// Replace with your actual Google Sheet URL
-const GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/18v3RW8ccAaK_7pYStgxMak1YH7Jw53HMidnvipyB4aQ/edit";
-
-function initializeSheetLink(){
-    const sheetLink = document.getElementById("sheetLink");
-    if(GOOGLE_SHEET_URL.includes("YOUR_SHEET_ID")){
-        sheetLink.textContent = "📊 Add Google Sheet URL";
-        sheetLink.style.color = "#dc2626";
-    } else {
-        sheetLink.href = GOOGLE_SHEET_URL;
-        sheetLink.style.color = "#2563eb";
-    }
-}
-
-window.addEventListener("load", () => {
-    setTodayDate();
-    initializeSheetLink();
-});
-</script>
-
+    // Initial render
+    renderItems();
+  </script>
 </body>
 </html>
